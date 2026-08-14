@@ -1,0 +1,157 @@
+.section {
+  --bg: #0b0c10;
+  --gold: #d4af37;
+  --text: #e0e0e0;
+  background: var(--bg);
+  padding: 0 1.15rem 2rem;
+}
+
+.frame {
+  max-width: 1380px;
+  margin: 0 auto;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  background: var(--bg);
+  padding: 1.7rem 1.25rem 1.85rem;
+}
+
+.header {
+  text-align: center;
+}
+
+.heading {
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  font-size: clamp(0.86rem, 2.5vw, 1.12rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: min(100%, 18rem);
+  margin: 0.9rem auto 1.55rem;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold) 18%,
+    var(--gold) 82%,
+    transparent
+  );
+  opacity: 0.9;
+}
+
+.diamond {
+  width: 7px;
+  height: 7px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
+  flex-shrink: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.6rem;
+}
+
+.item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iconWrap {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.65);
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  font-size: 1.45rem;
+  margin-bottom: 0.95rem;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.16) 0%,
+    rgba(212, 175, 55, 0.04) 55%,
+    transparent 72%
+  );
+  box-shadow: 0 0 22px rgba(212, 175, 55, 0.22);
+}
+
+.itemTitle {
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.55rem;
+}
+
+.itemText {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: var(--text);
+  max-width: 22rem;
+}
+
+@media (min-width: 720px) {
+  .section {
+    padding: 0 2.4rem 2.35rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .frame {
+    padding: 1.9rem 1.5rem 2rem;
+  }
+
+  .itemText {
+    font-size: 0.82rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .section {
+    padding: 0 4.2vw 2.5rem;
+  }
+
+  .heading {
+    letter-spacing: 0.16em;
+  }
+
+  .frame {
+    padding: 2.1rem 2rem 2.2rem;
+  }
+
+  .grid {
+    gap: 2rem;
+  }
+
+  .itemText {
+    font-size: 0.88rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    padding-left: 3.8rem;
+    padding-right: 3.8rem;
+  }
+}

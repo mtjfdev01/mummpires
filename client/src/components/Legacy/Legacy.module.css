@@ -1,0 +1,197 @@
+.legacy {
+  --bg: #0b0c10;
+  --gold: #d4af37;
+  --text: #e0e0e0;
+  background: var(--bg);
+  padding: 2.25rem 1.15rem 2.75rem;
+}
+
+.frame {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.08);
+}
+
+.emblem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1.5rem 0.5rem;
+}
+
+.emblemImg {
+  width: min(100%, 280px);
+  height: auto;
+}
+
+.rule {
+  display: none;
+}
+
+.copy {
+  padding: 1.35rem 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heading {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: clamp(0.78rem, 2.4vw, 0.92rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.1rem;
+}
+
+.body {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.82rem, 2.1vw, 0.95rem);
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.body p + p {
+  margin-top: 1.05rem;
+}
+
+.visual {
+  position: relative;
+  min-height: 210px;
+}
+
+.visualImg {
+  width: 100%;
+  height: 100%;
+  min-height: 210px;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--bg) 0%,
+    transparent 22%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (min-width: 720px) {
+  .legacy {
+    padding: 2.5rem 2.4rem 3.25rem;
+  }
+
+  .copy {
+    padding: 1.75rem 2rem 2rem;
+  }
+
+  .heading {
+    letter-spacing: 0.2em;
+  }
+}
+
+@media (min-width: 960px) {
+  .legacy {
+    padding: 2.1rem 4.2vw 4.25rem;
+  }
+
+  .frame {
+    grid-template-columns:
+      minmax(200px, 0.78fr)
+      1px
+      minmax(280px, 1.32fr)
+      minmax(260px, 1.18fr);
+    align-items: stretch;
+    min-height: 320px;
+  }
+
+  .emblem {
+    padding: 1.5rem 1.1rem 1.5rem 1.35rem;
+  }
+
+  .emblemImg {
+    width: min(100%, 300px);
+  }
+
+  .rule {
+    display: block;
+    width: 1px;
+    align-self: stretch;
+    margin: 1.75rem 0;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(212, 175, 55, 0.35) 12%,
+      var(--gold) 50%,
+      rgba(212, 175, 55, 0.35) 88%,
+      transparent 100%
+    );
+  }
+
+  .copy {
+    padding: 2.4rem 2.1rem 2.4rem 1.85rem;
+  }
+
+  .heading {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .body {
+    font-size: 0.94rem;
+    line-height: 1.72;
+    max-width: 38rem;
+  }
+
+  .visual {
+    min-height: 100%;
+  }
+
+  .visualImg {
+    position: absolute;
+    inset: 0;
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .visual::before {
+    background: linear-gradient(
+      90deg,
+      var(--bg) 0%,
+      rgba(11, 12, 16, 0.72) 12%,
+      transparent 38%
+    );
+  }
+}
+
+@media (min-width: 1280px) {
+  .legacy {
+    padding-left: 3.8rem;
+    padding-right: 3.8rem;
+  }
+
+  .frame {
+    min-height: 340px;
+  }
+
+  .copy {
+    padding: 2.6rem 2.4rem 2.6rem 2.1rem;
+  }
+
+  .body {
+    font-size: 0.98rem;
+  }
+}

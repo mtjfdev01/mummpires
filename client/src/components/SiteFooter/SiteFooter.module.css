@@ -1,0 +1,104 @@
+.section {
+  --bg: #0b0c10;
+  --gold: #d4af37;
+  --text: #e0e0e0;
+  background: var(--bg);
+  padding: 0 1.15rem 2.5rem;
+}
+
+.frame {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.35rem;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  background: var(--bg);
+  padding: 1.35rem 1.25rem 1.45rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.logo {
+  width: 72px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.tagline {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.meta {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.icon {
+  color: var(--gold);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  margin-top: 0.12rem;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.35));
+}
+
+.metaTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.metaSub {
+  margin-top: 0.18rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.78rem;
+  color: #c5c5c5;
+}
+
+@media (min-width: 720px) {
+  .section {
+    padding: 0 2.4rem 2.75rem;
+  }
+
+  .frame {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.15rem 1.5rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .section {
+    padding: 0 4.2vw 3.25rem;
+  }
+
+  .frame {
+    padding: 1.2rem 1.85rem;
+  }
+
+  .logo {
+    width: 78px;
+  }
+
+  .tagline {
+    font-size: 0.86rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    padding-left: 3.8rem;
+    padding-right: 3.8rem;
+  }
+}
