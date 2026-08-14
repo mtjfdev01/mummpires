@@ -70,10 +70,15 @@ function Leadership() {
             To respect confidentiality, please provide your details to connect
             with our leadership on LinkedIn.
           </p>
-          <button type="button" className={styles.connectBtn}>
+          <a
+            className={styles.connectBtn}
+            href="https://www.linkedin.com/in/muhammad-usman137?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span>Request Connection</span>
             <FaLinkedinIn aria-hidden="true" />
-          </button>
+          </a>
           <p className={styles.connectNote}>
             <FaLock aria-hidden="true" />
             <span>

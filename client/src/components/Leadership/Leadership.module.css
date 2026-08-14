@@ -151,6 +151,7 @@
   border: 1px solid rgba(244, 220, 140, 0.35);
   border-radius: 8px;
   cursor: pointer;
+  text-decoration: none;
   text-transform: uppercase;
   font-family: "Montserrat", sans-serif;
   font-weight: 700;

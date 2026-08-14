@@ -80,7 +80,15 @@ function Hero() {
             </div>
 
             <div className={styles.ctaRow}>
-              <button type="button" className={styles.primaryBtn}>
+              <button
+                type="button"
+                className={styles.primaryBtn}
+                onClick={() =>
+                  document
+                    .getElementById("rsvp")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+              >
                 <span>Confirm Your Invitation</span>
                 <span className={styles.primaryIcon} aria-hidden="true">
                   <IoMdArrowForward />

@@ -9,7 +9,7 @@ test("renders MuMMpires hero headline", () => {
 
 test("renders remaining landing sections", () => {
   render(<App />);
-  expect(screen.getByText(/a legacy in the making/i)).toBeInTheDocument();
+  expect(screen.getByText(/select your engagement preference/i)).toBeInTheDocument();
   expect(screen.getByText(/leadership & vision/i)).toBeInTheDocument();
   expect(
     screen.getByText(/automation & concierge experience/i)

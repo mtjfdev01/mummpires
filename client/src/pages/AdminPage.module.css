@@ -1,0 +1,200 @@
+.page {
+  --bg: #0b0c10;
+  --gold: #d4af37;
+  --text: #e0e0e0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  padding: 1.5rem 1.15rem 2.5rem;
+}
+
+.login,
+.shell {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.login {
+  max-width: 420px;
+  margin-top: 8vh;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  padding: 2rem 1.4rem;
+  display: grid;
+  gap: 0.85rem;
+  text-align: center;
+}
+
+.logo {
+  width: 92px;
+  margin: 0 auto 0.4rem;
+}
+
+.login h1,
+.topbar h1 {
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-size: 1.05rem;
+}
+
+.login p {
+  color: #c5c5c5;
+  font-size: 0.86rem;
+}
+
+.login label {
+  display: grid;
+  gap: 0.35rem;
+  text-align: left;
+  font-size: 0.78rem;
+}
+
+.login input,
+.tableWrap select {
+  background: #111216;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.75rem 0.85rem;
+  font-family: inherit;
+}
+
+.login button,
+.actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(180deg, #edcf5c 0%, #d4af37 48%, #c49a22 100%);
+  color: #14110a;
+}
+
+.error {
+  color: #e08a8a;
+  font-size: 0.82rem;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.topbar > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.smallLogo {
+  width: 52px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.ghost {
+  background: transparent !important;
+  color: var(--gold) !important;
+  border: 1px solid var(--gold) !important;
+}
+
+.tableWrap {
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.9rem 0.85rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  vertical-align: top;
+  font-size: 0.84rem;
+}
+
+th {
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+}
+
+td strong,
+td span {
+  display: block;
+}
+
+td span {
+  color: #b7b7b7;
+  margin-top: 0.2rem;
+}
+
+.empty {
+  text-align: center;
+  color: #9a9a9a;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  overflow: auto;
+  padding: 1.5rem 1rem;
+  z-index: 20;
+}
+
+.modalCard {
+  max-width: 980px;
+  margin: 0 auto;
+  background: #0b0c10;
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+
+.modalCard header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modalCard h2 {
+  font-family: "Cinzel", serif;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+
+.modalCard header button {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}

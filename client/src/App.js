@@ -1,19 +1,19 @@
-import Hero from "./components/Hero/Hero";
-import Legacy from "./components/Legacy/Legacy";
-import Leadership from "./components/Leadership/Leadership";
-import Concierge from "./components/Concierge/Concierge";
-import SiteFooter from "./components/SiteFooter/SiteFooter";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import AdminPage from "./pages/AdminPage";
 import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <Hero />
-      <Legacy />
-      <Leadership />
-      <Concierge />
-      <SiteFooter />
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/executive-brief" element={<LandingPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
