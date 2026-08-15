@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaLock, FaPlus, FaSignOutAlt } from "react-icons/fa";
 import {
   adminLogin,
@@ -23,10 +23,10 @@ function AdminPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const load = async (authToken = token) => {
+  const load = useCallback(async (authToken = token) => {
     const data = await listReservations(authToken);
     setRows(Array.isArray(data) ? data : []);
-  };
+  }, [token]);
 
   useEffect(() => {
     if (!token) return;
@@ -34,7 +34,7 @@ function AdminPage() {
       sessionStorage.removeItem(TOKEN_KEY);
       setToken("");
     });
-  }, [token]);
+  }, [token, load]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
