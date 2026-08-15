@@ -1,4 +1,7 @@
-const API = process.env.REACT_APP_API_URL || "";
+const PRODUCTION_API = "https://mummpiresbackend-production.up.railway.app";
+
+const API =
+  process.env.NODE_ENV === "development" ? "" : PRODUCTION_API;
 
 async function parse(res) {
   const data = await res.json().catch(() => ({}));
