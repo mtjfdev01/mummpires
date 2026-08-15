@@ -11,6 +11,10 @@ async function parse(res) {
   return data;
 }
 
+export function getAvailability() {
+  return fetch(`${API}/api/reservations/availability`).then(parse);
+}
+
 export function createReservation(payload) {
   return fetch(`${API}/api/reservations`, {
     method: "POST",

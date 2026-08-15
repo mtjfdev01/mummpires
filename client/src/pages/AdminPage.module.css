@@ -61,6 +61,30 @@
   font-family: inherit;
 }
 
+.passwordWrap {
+  position: relative;
+}
+
+.passwordWrap input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 2.7rem;
+}
+
+.login .toggle {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  background: transparent;
+  color: var(--gold);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .login button,
 .actions button {
   display: inline-flex;

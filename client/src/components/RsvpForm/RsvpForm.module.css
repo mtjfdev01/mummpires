@@ -227,6 +227,11 @@
   cursor: not-allowed;
 }
 
+.calTaken {
+  text-decoration: line-through;
+  color: #8a8a8a;
+}
+
 .calFirst {
   background: var(--gold);
   color: #0b0c10;

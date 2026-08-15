@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { HiOutlineCalendar, HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlineShield } from "react-icons/md";
-import { createReservation } from "../../api";
+import { createReservation, getAvailability } from "../../api";
 import { SESSION_OPTIONS, VENUE_OPTIONS, emptyRsvp } from "../../rsvpOptions";
 import styles from "./RsvpForm.module.css";
 
@@ -25,7 +25,12 @@ function formatPretty(key) {
   });
 }
 
-function Calendar({ firstChoiceDate, secondChoiceDate, onSelect }) {
+function Calendar({
+  firstChoiceDate,
+  secondChoiceDate,
+  unavailableDates = [],
+  onSelect,
+}) {
   const today = useMemo(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -88,7 +93,8 @@ function Calendar({ firstChoiceDate, secondChoiceDate, onSelect }) {
         {cells.map((date, index) => {
           if (!date) return <span key={`e-${index}`} />;
           const key = toKey(date);
-          const disabled = date < today;
+          const taken = unavailableDates.includes(key);
+          const disabled = date < today || taken;
           const isFirst = key === firstChoiceDate;
           const isSecond = key === secondChoiceDate;
           return (
@@ -96,9 +102,14 @@ function Calendar({ firstChoiceDate, secondChoiceDate, onSelect }) {
               key={key}
               type="button"
               disabled={disabled}
+              title={
+                taken
+                  ? "This slot is not available. Please choose another date."
+                  : undefined
+              }
               className={`${styles.calDay} ${isFirst ? styles.calFirst : ""} ${
                 isSecond ? styles.calSecond : ""
-              }`}
+              } ${taken ? styles.calTaken : ""}`}
               onClick={() => onSelect(key)}
             >
               {date.getDate()}
@@ -120,13 +131,52 @@ function RsvpForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [availability, setAvailability] = useState({ lunch: [], dinner: [] });
+
+  const unavailableDates = availability[form.sessionFormat] || [];
+  const otherSession =
+    form.sessionFormat === "lunch"
+      ? "Exclusive Dinner Session"
+      : "Private Executive Lunch";
+
+  useEffect(() => {
+    getAvailability()
+      .then((data) =>
+        setAvailability({
+          lunch: data.lunch || [],
+          dinner: data.dinner || [],
+        })
+      )
+      .catch(() => {});
+  }, []);
 
   const setField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setError("");
   };
 
+  const setSession = (value) => {
+    const taken = availability[value] || [];
+    setForm((prev) => ({
+      ...prev,
+      sessionFormat: value,
+      firstChoiceDate: taken.includes(prev.firstChoiceDate)
+        ? ""
+        : prev.firstChoiceDate,
+      secondChoiceDate: taken.includes(prev.secondChoiceDate)
+        ? ""
+        : prev.secondChoiceDate,
+    }));
+    setError("");
+  };
+
   const pickDate = (key) => {
+    if (unavailableDates.includes(key)) {
+      setError(
+        `This slot is not available. Please choose another date or try the ${otherSession}.`
+      );
+      return;
+    }
     if (activeDate === "first" || !form.firstChoiceDate) {
       setField("firstChoiceDate", key);
       setActiveDate("second");
@@ -147,9 +197,23 @@ function RsvpForm({
       setSuccess(true);
       setForm(emptyRsvp);
       setActiveDate("first");
+      const next = await getAvailability().catch(() => null);
+      if (next) {
+        setAvailability({
+          lunch: next.lunch || [],
+          dinner: next.dinner || [],
+        });
+      }
       return created;
     } catch (err) {
       setError(err.message || "Unable to submit reservation.");
+      const next = await getAvailability().catch(() => null);
+      if (next) {
+        setAvailability({
+          lunch: next.lunch || [],
+          dinner: next.dinner || [],
+        });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -175,7 +239,7 @@ function RsvpForm({
                 name="sessionFormat"
                 value={option.value}
                 checked={form.sessionFormat === option.value}
-                onChange={() => setField("sessionFormat", option.value)}
+                onChange={() => setSession(option.value)}
               />
               <span>
                 <strong>{option.title}</strong>
@@ -257,11 +321,15 @@ function RsvpForm({
                 <HiOutlineCalendar />
               </button>
             </div>
-            <p className={styles.note}>All times are subject to availability</p>
+            <p className={styles.note}>
+              All times are subject to availability. Unavailable dates are
+              dimmed on the calendar.
+            </p>
           </div>
           <Calendar
             firstChoiceDate={form.firstChoiceDate}
             secondChoiceDate={form.secondChoiceDate}
+            unavailableDates={unavailableDates}
             onSelect={pickDate}
           />
         </div>

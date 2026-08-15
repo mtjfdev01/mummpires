@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { FaLock, FaPlus, FaSignOutAlt } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaLock, FaPlus, FaSignOutAlt } from "react-icons/fa";
 import {
   adminLogin,
   createManualReservation,
@@ -22,6 +22,7 @@ function AdminPage() {
   const [error, setError] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const load = useCallback(async (authToken = token) => {
     const data = await listReservations(authToken);
@@ -79,12 +80,22 @@ function AdminPage() {
           </label>
           <label>
             Password
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
+            <div className={styles.passwordWrap}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className={styles.toggle}
+                onClick={() => setShowPassword((open) => !open)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </label>
           {error ? <p className={styles.error}>{error}</p> : null}
           <button type="submit" disabled={loading}>
