@@ -42,7 +42,7 @@ function AdminPage() {
     setError("");
     setLoading(true);
     try {
-      const data = await adminLogin(username, password);
+      const data = await adminLogin(username.trim(), password.trim());
       sessionStorage.setItem(TOKEN_KEY, data.token);
       setToken(data.token);
     } catch (err) {
