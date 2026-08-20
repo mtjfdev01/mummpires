@@ -191,7 +191,7 @@ td span {
 }
 
 .modalCard {
-  max-width: 980px;
+  max-width: 920px;
   margin: 0 auto;
   background: #0b0c10;
   border: 1px solid var(--gold);

@@ -57,7 +57,7 @@ function Leadership() {
         <div className={styles.portraitWrap}>
           <div className={styles.portrait}>
             <img
-              src="/assets/person_image.jpg"
+              src="/assets/person_image.png"
               alt="Founder and Executive Chairman of MuMMpires"
               className={styles.portraitImg}
             />

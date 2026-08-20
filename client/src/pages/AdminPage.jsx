@@ -6,8 +6,8 @@ import {
   listReservations,
   updateReservationStatus,
 } from "../api";
-import RsvpForm from "../components/RsvpForm/RsvpForm";
-import { sessionLabel, venueLabel } from "../rsvpOptions";
+import { sessionLabel, slotLabel, venueLabel } from "../rsvpOptions";
+import AdminBookingForm from "./AdminBookingForm";
 import styles from "./AdminPage.module.css";
 
 const TOKEN_KEY = "mummpires-admin-token";
@@ -132,7 +132,7 @@ function AdminPage() {
                 <th>Guest</th>
                 <th>Session</th>
                 <th>Venue</th>
-                <th>Dates</th>
+                <th>Date / slot</th>
                 <th>Status</th>
                 <th>Source</th>
               </tr>
@@ -148,15 +148,19 @@ function AdminPage() {
                 rows.map((row) => (
                   <tr key={row.id}>
                     <td>
-                      <strong>{row.fullName}</strong>
-                      <span>{row.email}</span>
-                      <span>{row.mobile}</span>
+                      <strong>{row.fullName || "Admin booking"}</strong>
+                      <span>{row.email || "No email"}</span>
+                      <span>{row.mobile || "No mobile"}</span>
                     </td>
                     <td>{sessionLabel(row.sessionFormat)}</td>
                     <td>{venueLabel(row.venue)}</td>
                     <td>
                       {row.firstChoiceDate}
-                      <span>{row.secondChoiceDate}</span>
+                      <span>
+                        {row.slotTime
+                          ? slotLabel(row.slotTime)
+                          : row.secondChoiceDate || "No time selected"}
+                      </span>
                     </td>
                     <td>
                       <select
@@ -188,9 +192,8 @@ function AdminPage() {
                 Close
               </button>
             </header>
-            <RsvpForm
-              variant="embedded"
-              submitLabel="Save reservation"
+            <AdminBookingForm
+              onCancel={() => setShowAdd(false)}
               onSubmitted={async (payload) => {
                 const created = await createManualReservation(token, payload);
                 await load();
