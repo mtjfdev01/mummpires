@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import AdminPage from "./pages/AdminPage";
 import "./App.css";
+import "./animations.css";
 
 function App() {
   return (

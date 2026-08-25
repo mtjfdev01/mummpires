@@ -246,7 +246,7 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
 
       <fieldset className={styles.block}>
         <legend>Venue</legend>
-        <div className={styles.options}>
+        {/* <div className={styles.options}>
           {VENUE_OPTIONS.map((option) => (
             <label
               key={option.value}
@@ -264,7 +264,7 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
               <span>{option.title}</span>
             </label>
           ))}
-        </div>
+        </div> */}
       </fieldset>
 
       <fieldset className={styles.block}>

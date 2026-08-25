@@ -9,8 +9,8 @@
 .frame {
   max-width: 1380px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1.35rem;
   border: 1px solid var(--gold);
   border-radius: 14px;
@@ -28,6 +28,7 @@
   width: 72px;
   height: auto;
   flex-shrink: 0;
+  animation: goldPulse 5.5s ease-in-out infinite;
 }
 
 .tagline {
@@ -71,10 +72,18 @@
   }
 
   .frame {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 1.25rem;
     padding: 1.15rem 1.5rem;
+  }
+
+  .meta {
+    margin-left: auto;
+    text-align: right;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 
@@ -100,5 +109,21 @@
   .section {
     padding-left: 3.8rem;
     padding-right: 3.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation: none !important;
+  }
+}
+
+@keyframes goldPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.45));
   }
 }

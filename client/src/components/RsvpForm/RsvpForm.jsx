@@ -1,9 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { FaLock } from "react-icons/fa";
-import { HiOutlineCalendar, HiOutlineLocationMarker } from "react-icons/hi";
+import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlineShield } from "react-icons/md";
 import { createReservation, getAvailability } from "../../api";
-import { SESSION_OPTIONS, VENUE_OPTIONS, emptyRsvp } from "../../rsvpOptions";
+import {
+  ALL_SLOTS,
+  DINNER_SLOTS,
+  LUNCH_SLOTS,
+  SESSION_OPTIONS,
+  VENUE_OPTIONS,
+  emptyRsvp,
+} from "../../rsvpOptions";
 import styles from "./RsvpForm.module.css";
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -25,12 +32,7 @@ function formatPretty(key) {
   });
 }
 
-function Calendar({
-  firstChoiceDate,
-  secondChoiceDate,
-  unavailableDates = [],
-  onSelect,
-}) {
+function Calendar({ selectedDate, isDisabled, onSelect }) {
   const today = useMemo(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -93,23 +95,16 @@ function Calendar({
         {cells.map((date, index) => {
           if (!date) return <span key={`e-${index}`} />;
           const key = toKey(date);
-          const taken = unavailableDates.includes(key);
-          const disabled = date < today || taken;
-          const isFirst = key === firstChoiceDate;
-          const isSecond = key === secondChoiceDate;
+          const full = isDisabled(key);
+          const disabled = date < today || full;
           return (
             <button
               key={key}
               type="button"
               disabled={disabled}
-              title={
-                taken
-                  ? "This slot is not available. Please choose another date."
-                  : undefined
-              }
-              className={`${styles.calDay} ${isFirst ? styles.calFirst : ""} ${
-                isSecond ? styles.calSecond : ""
-              } ${taken ? styles.calTaken : ""}`}
+              className={`${styles.calDay} ${
+                key === selectedDate ? styles.calFirst : ""
+              } ${full ? styles.calTaken : ""}`}
               onClick={() => onSelect(key)}
             >
               {date.getDate()}
@@ -127,16 +122,15 @@ function RsvpForm({
   submitLabel = "Confirm Private Invitation & Reservation",
 }) {
   const [form, setForm] = useState(emptyRsvp);
-  const [activeDate, setActiveDate] = useState("first");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [availability, setAvailability] = useState({ lunch: [], dinner: [] });
+  const [availability, setAvailability] = useState({ slots: {} });
 
-  const unavailableDates = availability[form.sessionFormat] || [];
+  const takenSlots = availability.slots || {};
   const otherSession =
     form.sessionFormat === "lunch"
-      ? "Exclusive Dinner Session"
+      ? "Private Executive Dinner"
       : "Private Executive Lunch";
 
   useEffect(() => {
@@ -145,6 +139,7 @@ function RsvpForm({
         setAvailability({
           lunch: data.lunch || [],
           dinner: data.dinner || [],
+          slots: data.slots || {},
         })
       )
       .catch(() => {});
@@ -155,39 +150,60 @@ function RsvpForm({
     setError("");
   };
 
+  const isFullyBooked = (key) => {
+    const taken = takenSlots[key] || [];
+    return ALL_SLOTS.every((slot) => taken.includes(slot.value));
+  };
+
   const setSession = (value) => {
-    const taken = availability[value] || [];
     setForm((prev) => ({
       ...prev,
       sessionFormat: value,
-      firstChoiceDate: taken.includes(prev.firstChoiceDate)
-        ? ""
-        : prev.firstChoiceDate,
-      secondChoiceDate: taken.includes(prev.secondChoiceDate)
-        ? ""
-        : prev.secondChoiceDate,
+      slotTime: "",
     }));
     setError("");
   };
 
   const pickDate = (key) => {
-    if (unavailableDates.includes(key)) {
+    if (isFullyBooked(key)) {
       setError(
         `This slot is not available. Please choose another date or try the ${otherSession}.`
       );
       return;
     }
-    if (activeDate === "first" || !form.firstChoiceDate) {
-      setField("firstChoiceDate", key);
-      setActiveDate("second");
+    setForm((prev) => ({
+      ...prev,
+      firstChoiceDate: key,
+      secondChoiceDate: "",
+      slotTime: "",
+    }));
+    setError("");
+  };
+
+  const pickSlot = (value) => {
+    const taken = (takenSlots[form.firstChoiceDate] || []).includes(value);
+    if (taken) {
+      setError(
+        "This slot is not available. Please choose another time or date."
+      );
       return;
     }
-    if (key === form.firstChoiceDate) return;
-    setField("secondChoiceDate", key);
+    setForm((prev) => ({
+      ...prev,
+      slotTime: value,
+      sessionFormat: DINNER_SLOTS.some((slot) => slot.value === value)
+        ? "dinner"
+        : "lunch",
+    }));
+    setError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!form.firstChoiceDate || !form.slotTime) {
+      setError("Please pick a date and an available time slot.");
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
@@ -196,12 +212,12 @@ function RsvpForm({
         : createReservation(form));
       setSuccess(true);
       setForm(emptyRsvp);
-      setActiveDate("first");
       const next = await getAvailability().catch(() => null);
       if (next) {
         setAvailability({
           lunch: next.lunch || [],
           dinner: next.dinner || [],
+          slots: next.slots || {},
         });
       }
       return created;
@@ -212,6 +228,7 @@ function RsvpForm({
         setAvailability({
           lunch: next.lunch || [],
           dinner: next.dinner || [],
+          slots: next.slots || {},
         });
       }
     } finally {
@@ -263,7 +280,7 @@ function RsvpForm({
             7105 Avalon Blvd, Alpharetta, GA 30009
           </span>
         </p>
-        <div className={styles.options}>
+        {/* <div className={styles.options}>
           {VENUE_OPTIONS.map((option) => (
             <label
               key={option.value}
@@ -283,7 +300,7 @@ function RsvpForm({
               </span>
             </label>
           ))}
-        </div>
+        </div> */}
       </article>
 
       <article className={`${styles.card} ${styles.full}`}>
@@ -292,46 +309,69 @@ function RsvpForm({
           <h3>Date Availability</h3>
         </header>
         <div className={styles.dateLayout}>
-          <div>
-            <div className={styles.dateRow}>
-              <button
-                type="button"
-                className={`${styles.dateField} ${
-                  activeDate === "first" ? styles.dateFieldOn : ""
-                }`}
-                onClick={() => setActiveDate("first")}
-              >
-                <span>1st Choice</span>
-                <strong>
-                  {formatPretty(form.firstChoiceDate) || "Select date"}
-                </strong>
-                <HiOutlineCalendar />
-              </button>
-              <button
-                type="button"
-                className={`${styles.dateField} ${
-                  activeDate === "second" ? styles.dateFieldOn : ""
-                }`}
-                onClick={() => setActiveDate("second")}
-              >
-                <span>2nd Choice</span>
-                <strong>
-                  {formatPretty(form.secondChoiceDate) || "Select date"}
-                </strong>
-                <HiOutlineCalendar />
-              </button>
-            </div>
-            <p className={styles.note}>
-              All times are subject to availability. Unavailable dates are
-              dimmed on the calendar.
-            </p>
-          </div>
           <Calendar
-            firstChoiceDate={form.firstChoiceDate}
-            secondChoiceDate={form.secondChoiceDate}
-            unavailableDates={unavailableDates}
+            selectedDate={form.firstChoiceDate}
+            isDisabled={isFullyBooked}
             onSelect={pickDate}
           />
+          <div className={styles.times}>
+            {form.firstChoiceDate ? (
+              <>
+                <p className={styles.timesHead}>
+                  Available starting times for{" "}
+                  {formatPretty(form.firstChoiceDate)}
+                </p>
+                <div className={styles.slotGrid}>
+                  <div className={styles.slotCol}>
+                    <h4>Lunch</h4>
+                    {LUNCH_SLOTS.map((slot) => {
+                      const taken = (
+                        takenSlots[form.firstChoiceDate] || []
+                      ).includes(slot.value);
+                      return (
+                        <button
+                          key={slot.value}
+                          type="button"
+                          disabled={taken}
+                          className={`${styles.slotBtn} ${
+                            form.slotTime === slot.value ? styles.slotOn : ""
+                          }`}
+                          onClick={() => pickSlot(slot.value)}
+                        >
+                          {slot.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className={styles.slotCol}>
+                    <h4>Dinner</h4>
+                    {DINNER_SLOTS.map((slot) => {
+                      const taken = (
+                        takenSlots[form.firstChoiceDate] || []
+                      ).includes(slot.value);
+                      return (
+                        <button
+                          key={slot.value}
+                          type="button"
+                          disabled={taken}
+                          className={`${styles.slotBtn} ${
+                            form.slotTime === slot.value ? styles.slotOn : ""
+                          }`}
+                          onClick={() => pickSlot(slot.value)}
+                        >
+                          {slot.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className={styles.timesHead}>
+                Select a date to see available lunch and dinner slots.
+              </p>
+            )}
+          </div>
         </div>
       </article>
 

@@ -54,6 +54,7 @@
   transform: rotate(45deg);
   box-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
   flex-shrink: 0;
+  animation: diamondPulse 2.8s ease-in-out infinite;
 }
 
 .body {
@@ -69,11 +70,18 @@
 }
 
 .signature {
-  width: min(100%, 220px);
+  width: min(100%, 280px);
   height: auto;
   display: block;
   margin-bottom: 0.35rem;
   filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.25));
+  animation: goldPulse 5s ease-in-out infinite;
+}
+
+.signatureName {
+  font-family: "Great Vibes", cursive;
+  font-size: 46px;
+  font-weight: 400;
 }
 
 .role {
@@ -105,6 +113,12 @@
   overflow: hidden;
   aspect-ratio: 4 / 5;
   background: #111;
+  transition: transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.portrait:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(212, 175, 55, 0.16);
 }
 
 .portraitImg {
@@ -112,6 +126,11 @@
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  transition: transform 0.7s ease;
+}
+
+.portrait:hover .portraitImg {
+  transform: scale(1.04);
 }
 
 .connect {
@@ -121,6 +140,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.connect:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(212, 175, 55, 0.12);
 }
 
 .connectHeading {
@@ -142,6 +167,8 @@
 }
 
 .connectBtn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -163,6 +190,20 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
+.connectBtn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
 .connectBtn svg {
   font-size: 1.05rem;
 }
@@ -171,6 +212,10 @@
   filter: brightness(1.07);
   transform: translateY(-1px);
   box-shadow: 0 10px 26px rgba(212, 175, 55, 0.32);
+}
+
+.connectBtn:hover::after {
+  animation: shineSweep 0.75s ease;
 }
 
 .connectBtn:focus-visible {
@@ -246,5 +291,50 @@
 
   .body {
     font-size: 0.96rem;
+  }
+}
+
+@keyframes diamondPulse {
+  0%,
+  100% {
+    transform: rotate(45deg) scale(1);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
+  }
+  50% {
+    transform: rotate(45deg) scale(1.2);
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diamond,
+  .signature,
+  .connectBtn::after {
+    animation: none !important;
+  }
+
+  .portrait,
+  .portraitImg,
+  .connect {
+    transition: none;
+  }
+}
+
+@keyframes goldPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.5));
+  }
+}
+
+@keyframes shineSweep {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
   }
 }

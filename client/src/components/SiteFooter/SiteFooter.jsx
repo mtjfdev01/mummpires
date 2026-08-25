@@ -1,5 +1,4 @@
 import { FaLock } from "react-icons/fa";
-import { HiOutlineLocationMarker } from "react-icons/hi";
 import styles from "./SiteFooter.module.css";
 
 function SiteFooter() {
@@ -13,7 +12,7 @@ function SiteFooter() {
           </p>
         </div>
 
-        <div className={styles.meta}>
+        {/* <div className={styles.meta}>
           <HiOutlineLocationMarker className={styles.icon} aria-hidden="true" />
           <div>
             <p className={styles.metaTitle}>Rumi&apos;s Kitchen — Avalon</p>
@@ -21,7 +20,7 @@ function SiteFooter() {
               7105 Avalon Blvd, Alpharetta, GA 30009
             </p>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.meta}>
           <FaLock className={styles.icon} aria-hidden="true" />

@@ -12,6 +12,7 @@
   border: 1px solid var(--gold);
   border-radius: 14px;
   padding: 1.15rem 1.1rem 1.2rem;
+  animation: frameGlow 7s ease-in-out infinite;
 }
 
 .title {
@@ -34,6 +35,12 @@
   border: 1px solid rgba(212, 175, 55, 0.45);
   border-radius: 10px;
   padding: 0.75rem 0.85rem 0.85rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.08);
 }
 
 .cardHead {
@@ -76,6 +83,12 @@
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
   cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.option:hover {
+  transform: translateY(-1px);
+  border-color: rgba(212, 175, 55, 0.7);
 }
 
 .option input {
@@ -125,6 +138,68 @@
   gap: 0.7rem;
 }
 
+.times {
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 8px;
+  padding: 0.55rem 0.6rem 0.65rem;
+}
+
+.timesHead {
+  color: #d8d8d8;
+  font-size: 0.76rem;
+  margin-bottom: 0.55rem;
+}
+
+.slotGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.slotCol {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+}
+
+.slotCol h4 {
+  color: var(--gold);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.slotBtn {
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.5rem 0.35rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.slotBtn:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.slotBtn:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: var(--gold);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.12);
+}
+
+.slotOn {
+  background: linear-gradient(180deg, #edcf5c 0%, #d4af37 48%, #c49a22 100%);
+  color: #14110a;
+  border-color: var(--gold);
+  font-weight: 700;
+}
+
 .dateRow {
   display: grid;
   gap: 0.5rem;
@@ -141,6 +216,12 @@
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
   cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.dateField:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
 }
 
 .dateField span {
@@ -196,6 +277,12 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 1.05rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.calNav:hover {
+  background: rgba(212, 175, 55, 0.12);
+  transform: scale(1.06);
 }
 
 .calGrid {
@@ -220,11 +307,17 @@
   border-radius: 999px;
   cursor: pointer;
   font-size: 0.75rem;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .calDay:disabled {
   opacity: 0.28;
   cursor: not-allowed;
+}
+
+.calDay:not(:disabled):hover {
+  background: rgba(212, 175, 55, 0.16);
+  transform: scale(1.08);
 }
 
 .calTaken {
@@ -289,6 +382,8 @@
 }
 
 .submit {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   display: inline-flex;
   align-items: center;
@@ -306,6 +401,31 @@
   padding: 0.75rem 1rem;
   background: linear-gradient(180deg, #edcf5c 0%, #d4af37 48%, #c49a22 100%);
   box-shadow: 0 8px 22px rgba(212, 175, 55, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
+.submit:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(212, 175, 55, 0.32);
+}
+
+.submit:hover::after {
+  animation: shineSweep 0.75s ease;
 }
 
 .submit:disabled {
@@ -338,6 +458,7 @@
 
 .success {
   color: #d4af37;
+  animation: pageEnter 0.45s ease both;
 }
 
 @media (min-width: 720px) {
@@ -382,5 +503,42 @@
   .section {
     padding-left: 3.8rem;
     padding-right: 3.8rem;
+  }
+}
+
+@keyframes frameGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.08);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame,
+  .submit::after {
+    animation: none !important;
+  }
+}
+
+@keyframes shineSweep {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

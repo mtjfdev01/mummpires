@@ -38,6 +38,7 @@ function Hero() {
             alt="MuMMpires"
             className={styles.logo}
           />
+          <p className={styles.brandTag}>Prop-AI Startup</p>
         </header>
 
         <div className={styles.grid}>
@@ -63,7 +64,7 @@ function Hero() {
                   <HiOutlineCalendar className={styles.metaIcon} />
                   <div>
                     <p className={styles.metaTitle}>Private 1-on-1</p>
-                    <p className={styles.metaSub}>Meet &amp; Greet</p>
+                    <p className={styles.metaSub}>Pitch &amp; Platters</p>
                   </div>
                 </div>
 
@@ -95,7 +96,7 @@ function Hero() {
                 </span>
               </button>
 
-              <button
+              {/* <button
                 type="button"
                 className={styles.ghostBtn}
                 onClick={playVideo}
@@ -104,7 +105,7 @@ function Hero() {
                 <span className={styles.ghostIcon} aria-hidden="true">
                   <FaPlay />
                 </span>
-              </button>
+              </button> */}
             </div>
           </div>
 

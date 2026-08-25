@@ -74,11 +74,17 @@
   border-radius: 999px;
   cursor: pointer;
   font-size: 0.78rem;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .calDay:disabled {
   opacity: 0.28;
   cursor: not-allowed;
+}
+
+.calDay:not(:disabled):hover {
+  background: rgba(212, 175, 55, 0.16);
+  transform: scale(1.08);
 }
 
 .calOn {
@@ -124,12 +130,19 @@
   padding: 0.55rem 0.4rem;
   cursor: pointer;
   font-size: 0.82rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .slotBtn:disabled {
   opacity: 0.32;
   cursor: not-allowed;
   text-decoration: line-through;
+}
+
+.slotBtn:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: var(--gold);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.12);
 }
 
 .slotOn {
@@ -175,6 +188,12 @@
   padding: 0.55rem 0.7rem;
   cursor: pointer;
   font-size: 0.82rem;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.option:hover {
+  transform: translateY(-1px);
+  border-color: rgba(212, 175, 55, 0.7);
 }
 
 .option input {

@@ -6,7 +6,7 @@ function Legacy() {
       <div className={styles.frame}>
         <div className={styles.emblem}>
           <img
-            src="/assets/img_one.png"
+            src="/assets/img_one.jpg"
             alt="MuMMpires crest"
             className={styles.emblemImg}
           />

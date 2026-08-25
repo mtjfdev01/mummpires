@@ -1,4 +1,4 @@
-import { FaLinkedinIn, FaLock } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa";
 import styles from "./Leadership.module.css";
 
 function Divider() {
@@ -21,7 +21,7 @@ function Leadership() {
           </h2>
           <Divider />
           <p className={styles.body}>
-            With 20+ years of multinational business management, AI product
+            With 22+ years of multinational business management, AI product
             architecture, and enterprise execution, our leadership brings a
             unique blend of vision, innovation, and operational excellence to
             build the future.
@@ -30,21 +30,23 @@ function Leadership() {
           <div className={styles.signBlock}>
             <svg
               className={styles.signature}
-              viewBox="0 0 260 72"
+              viewBox="0 0 300 86"
               fill="none"
-              aria-hidden="true"
+              role="img"
+              aria-label="Signature of Malik Usman"
             >
+              <text
+                x="8"
+                y="54"
+                fill="#D4AF37"
+                className={styles.signatureName}
+              >
+                Malik Usman
+              </text>
               <path
-                d="M10 46c16-26 30-10 38 4 8 14 16-30 38-26 14 3 12 32 30 28 16-4 16-28 36-20 14 6 10 24 24 22 22-4 26-32 50-16 12 8 20 16 32 8"
+                d="M22 66c42 10 88 8 152-6 22-5 48-14 78-8"
                 stroke="#D4AF37"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M64 58c48 8 96 6 158-8"
-                stroke="#D4AF37"
-                strokeWidth="1.15"
+                strokeWidth="1.25"
                 strokeLinecap="round"
                 opacity="0.9"
               />
@@ -67,8 +69,7 @@ function Leadership() {
         <aside className={styles.connect}>
           <h3 className={styles.connectHeading}>Connect on LinkedIn</h3>
           <p className={styles.connectBody}>
-            To respect confidentiality, please provide your details to connect
-            with our leadership on LinkedIn.
+            Let us make the next global big thing together.
           </p>
           <a
             className={styles.connectBtn}
@@ -80,10 +81,8 @@ function Leadership() {
             <FaLinkedinIn aria-hidden="true" />
           </a>
           <p className={styles.connectNote}>
-            <FaLock aria-hidden="true" />
             <span>
-              A gated form will appear to verify your information before
-              redirecting to LinkedIn.
+              Not number one — the only one in the global real estate market.
             </span>
           </p>
         </aside>
