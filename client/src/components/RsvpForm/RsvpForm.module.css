@@ -117,20 +117,17 @@
   background: rgba(212, 175, 55, 0.05);
 }
 
-.venueMeta {
+.venueChoice {
   display: flex;
+  align-items: flex-start;
   gap: 0.45rem;
-  color: var(--text);
-  font-size: 0.76rem;
-  line-height: 1.35;
-  margin-bottom: 0.55rem;
 }
 
-.venueMeta svg {
+.venueChoice svg {
   color: var(--gold);
   font-size: 1rem;
   flex-shrink: 0;
-  margin-top: 0.08rem;
+  margin-top: 0.12rem;
 }
 
 .dateLayout {
@@ -343,7 +340,6 @@
   color: #b7b7b7;
 }
 
-.textarea,
 .fields input {
   width: 100%;
   background: #111216;
@@ -355,12 +351,6 @@
   padding: 0.5rem 0.7rem;
 }
 
-.textarea {
-  min-height: 4.4rem;
-  resize: vertical;
-}
-
-.textarea:focus,
 .fields input:focus {
   outline: 1px solid var(--gold);
 }

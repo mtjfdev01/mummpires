@@ -196,6 +196,14 @@
   border-color: rgba(212, 175, 55, 0.7);
 }
 
+.option em {
+  display: block;
+  margin-top: 0.12rem;
+  font-style: normal;
+  color: #b7b7b7;
+  font-size: 0.74rem;
+}
+
 .option input {
   accent-color: var(--gold);
 }

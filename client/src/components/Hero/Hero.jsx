@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { HiOutlineCalendar, HiOutlineLocationMarker } from "react-icons/hi";
 import { IoMdArrowForward } from "react-icons/io";
@@ -7,10 +7,22 @@ import { MdFullscreen, MdSkipNext } from "react-icons/md";
 import styles from "./Hero.module.css";
 
 function Hero() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
 
-  const togglePlay = () => setIsPlaying((prev) => !prev);
-  const playVideo = () => setIsPlaying(true);
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  };
+
+  const playVideo = () => {
+    videoRef.current?.play();
+  };
 
   return (
     <section className={styles.hero}>
@@ -71,10 +83,21 @@ function Hero() {
                 <span className={styles.metaRule} aria-hidden="true" />
 
                 <div className={styles.metaItem}>
-                  <HiOutlineLocationMarker className={styles.metaIcon} />
-                  <div>
-                    <p className={styles.metaTitle}>Rumi&apos;s Kitchen</p>
-                    <p className={styles.metaSub}>Avalon, Alpharetta, GA</p>
+                  <div className={styles.metaStack}>
+                    <div className={styles.metaPlace}>
+                      <HiOutlineLocationMarker className={styles.metaIcon} />
+                      <div>
+                        <p className={styles.metaTitle}>Rumi&apos;s Kitchen</p>
+                        <p className={styles.metaSub}>Avalon, Alpharetta, GA</p>
+                      </div>
+                    </div>
+                    <div className={styles.metaPlace}>
+                      <HiOutlineLocationMarker className={styles.metaIcon} />
+                      <div>
+                        <p className={styles.metaTitle}>Starbucks</p>
+                        <p className={styles.metaSub}>Alpharetta, Georgia</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -115,10 +138,16 @@ function Hero() {
               role="group"
               aria-label="Introduction video player"
             >
-              <img
-                src="/assets/hero-video-thumb.png"
-                alt="Futuristic glass biome domes at sunset"
+              <video
+                ref={videoRef}
                 className={styles.poster}
+                src="/assets/hero_video.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
               />
 
               {!isPlaying && (

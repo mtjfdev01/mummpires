@@ -4,11 +4,11 @@ function Legacy() {
   return (
     <section className={styles.legacy} aria-labelledby="legacy-heading">
       <div className={styles.frame}>
-        <div className={styles.emblem}>
+        <div className={`${styles.visual} ${styles.visualLeft}`}>
           <img
-            src="/assets/img_one.jpg"
-            alt="MuMMpires crest"
-            className={styles.emblemImg}
+            src="/assets/legacy-visual.png"
+            alt="Night view of MuMMpires bio-architecture along the waterfront"
+            className={styles.visualImg}
           />
         </div>
 
@@ -34,11 +34,15 @@ function Legacy() {
           </div>
         </div>
 
-        <div className={styles.visual}>
-          <img
-            src="/assets/legacy-visual.png"
-            alt="Night view of MuMMpires bio-architecture along the waterfront"
-            className={styles.visualImg}
+        <div className={`${styles.visual} ${styles.visualRight}`}>
+          <video
+            className={styles.visualVideo}
+            src="/assets/legacy_video.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-label="MuMMpires bio-architecture film"
           />
         </div>
       </div>

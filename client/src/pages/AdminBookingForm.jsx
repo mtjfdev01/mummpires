@@ -4,7 +4,9 @@ import {
   DINNER_SLOTS,
   LUNCH_SLOTS,
   ALL_SLOTS,
+  SESSION_OPTIONS,
   VENUE_OPTIONS,
+  isSlotVenue,
   sessionFromSlot,
 } from "../rsvpOptions";
 import styles from "./AdminBookingForm.module.css";
@@ -33,6 +35,7 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
   const [date, setDate] = useState("");
   const [slotTime, setSlotTime] = useState("");
   const [venue, setVenue] = useState("private-dining");
+  const [sessionFormat, setSessionFormat] = useState("lunch");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -40,7 +43,10 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
   const [dietary, setDietary] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [availability, setAvailability] = useState({ slots: {} });
+  const [availability, setAvailability] = useState({
+    rumi: { lunch: [], dinner: [] },
+    slots: {},
+  });
 
   const today = useMemo(() => {
     const now = new Date();
@@ -52,14 +58,19 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
   );
 
   const takenSlots = availability.slots || {};
+  const rumiLunch = availability.rumi?.lunch || [];
+  const rumiDinner = availability.rumi?.dinner || [];
+  const slotBooking = isSlotVenue(venue);
 
   useEffect(() => {
     getAvailability()
       .then((data) =>
         setAvailability({
-          lunch: data.lunch || [],
-          dinner: data.dinner || [],
-          slots: data.slots || {},
+          rumi: {
+            lunch: data.rumi?.lunch || data.lunch || [],
+            dinner: data.rumi?.dinner || data.dinner || [],
+          },
+          slots: data.starbucks?.slots || data.slots || {},
         })
       )
       .catch(() => {});
@@ -85,8 +96,20 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
   });
 
   const isFullyBooked = (key) => {
-    const taken = takenSlots[key] || [];
-    return ALL_SLOTS.every((slot) => taken.includes(slot.value));
+    if (slotBooking) {
+      const taken = takenSlots[key] || [];
+      return ALL_SLOTS.every((slot) => taken.includes(slot.value));
+    }
+    const taken = sessionFormat === "dinner" ? rumiDinner : rumiLunch;
+    return taken.includes(key);
+  };
+
+  const pickVenue = (value) => {
+    setVenue(value);
+    setDate("");
+    setSlotTime("");
+    setSessionFormat("lunch");
+    setError("");
   };
 
   const pickDate = (key) => {
@@ -109,19 +132,23 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!date || !slotTime) {
-      setError("Please pick a date and an available time slot.");
+    if (!date || (slotBooking && !slotTime)) {
+      setError(
+        slotBooking
+          ? "Please pick a date and an available time slot."
+          : "Please pick a date for this session."
+      );
       return;
     }
     setSubmitting(true);
     setError("");
     try {
       await onSubmitted({
-        sessionFormat: sessionFromSlot(slotTime),
+        sessionFormat: slotBooking ? sessionFromSlot(slotTime) : sessionFormat,
         venue,
         firstChoiceDate: date,
         secondChoiceDate: "",
-        slotTime,
+        slotTime: slotBooking ? slotTime : "",
         dietary: dietary.trim(),
         fullName: fullName.trim(),
         email: email.trim(),
@@ -163,10 +190,71 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.intro}>
-        <h3>Pick a date and time</h3>
-        <p>Duration: 30 minutes</p>
-        <p>Your time zone: United States; Eastern time</p>
+        <h3>Pick a location, date, and time</h3>
+        <p>
+          {slotBooking
+            ? "Starbucks uses 30-minute slots. Eastern time."
+            : "Rumi's Kitchen uses lunch or dinner sessions. Eastern time."}
+        </p>
       </div>
+
+      <fieldset className={styles.block}>
+        <legend>Venue</legend>
+        <div className={styles.options}>
+          {VENUE_OPTIONS.map((option) => (
+            <label
+              key={option.value}
+              className={`${styles.option} ${
+                venue === option.value ? styles.optionOn : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="venue"
+                value={option.value}
+                checked={venue === option.value}
+                onChange={() => pickVenue(option.value)}
+              />
+              <span>
+                {option.title}
+                <em>{option.detail}</em>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      {!slotBooking ? (
+        <fieldset className={styles.block}>
+          <legend>Session</legend>
+          <div className={styles.options}>
+            {SESSION_OPTIONS.map((option) => (
+              <label
+                key={option.value}
+                className={`${styles.option} ${
+                  sessionFormat === option.value ? styles.optionOn : ""
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="sessionFormat"
+                  value={option.value}
+                  checked={sessionFormat === option.value}
+                  onChange={() => {
+                    setSessionFormat(option.value);
+                    setDate("");
+                    setError("");
+                  }}
+                />
+                <span>
+                  {option.title}
+                  <em>{option.detail}</em>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
 
       <div className={styles.scheduler}>
         <div className={styles.calendar}>
@@ -226,46 +314,32 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
         </div>
 
         <div className={styles.times}>
-          {date ? (
-            <>
+            {date ? (
+              slotBooking ? (
+                <>
+                  <p className={styles.timesHead}>
+                    Available starting times for {formatPretty(date)}
+                  </p>
+                  <div className={styles.slotGrid}>
+                    {renderSlots("Lunch", LUNCH_SLOTS)}
+                    {renderSlots("Dinner", DINNER_SLOTS)}
+                  </div>
+                </>
+              ) : (
+                <p className={styles.timesHead}>
+                  {SESSION_OPTIONS.find((item) => item.value === sessionFormat)?.title}{" "}
+                  on {formatPretty(date)}
+                </p>
+              )
+            ) : (
               <p className={styles.timesHead}>
-                Available starting times for {formatPretty(date)}
+                {slotBooking
+                  ? "Select a date to see available Starbucks time slots."
+                  : "Select a date for this lunch or dinner session."}
               </p>
-              <div className={styles.slotGrid}>
-                {renderSlots("Lunch", LUNCH_SLOTS)}
-                {renderSlots("Dinner", DINNER_SLOTS)}
-              </div>
-            </>
-          ) : (
-            <p className={styles.timesHead}>
-              Select a date to see available lunch and dinner slots.
-            </p>
-          )}
+            )}
         </div>
       </div>
-
-      <fieldset className={styles.block}>
-        <legend>Venue</legend>
-        {/* <div className={styles.options}>
-          {VENUE_OPTIONS.map((option) => (
-            <label
-              key={option.value}
-              className={`${styles.option} ${
-                venue === option.value ? styles.optionOn : ""
-              }`}
-            >
-              <input
-                type="radio"
-                name="venue"
-                value={option.value}
-                checked={venue === option.value}
-                onChange={() => setVenue(option.value)}
-              />
-              <span>{option.title}</span>
-            </label>
-          ))}
-        </div> */}
-      </fieldset>
 
       <fieldset className={styles.block}>
         <legend>Contact details (optional)</legend>

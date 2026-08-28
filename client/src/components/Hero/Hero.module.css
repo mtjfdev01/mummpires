@@ -258,6 +258,17 @@
   line-height: 1.3;
 }
 
+.metaStack {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.metaPlace {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
 .metaRule {
   width: 1px;
   background: linear-gradient(
@@ -408,7 +419,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  animation: kenBurns 22s ease-in-out infinite alternate;
 }
 
 .playOverlay {

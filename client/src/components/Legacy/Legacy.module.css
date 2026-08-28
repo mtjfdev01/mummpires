@@ -23,19 +23,6 @@
   box-shadow: 0 0 28px rgba(212, 175, 55, 0.1);
 }
 
-.emblem {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.75rem 1.5rem 0.5rem;
-}
-
-.emblemImg {
-  width: min(100%, 280px);
-  height: auto;
-  animation: emblemFloat 8s ease-in-out infinite;
-}
-
 .rule {
   display: none;
 }
@@ -71,17 +58,26 @@
 
 .visual {
   position: relative;
-  min-height: 210px;
   overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  height: 220px;
 }
 
-.visualImg {
+.visualImg,
+.visualVideo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 210px;
+  max-width: none;
   object-fit: cover;
-  object-position: center 40%;
-  animation: kenBurns 24s ease-in-out infinite alternate;
+  object-position: center;
+}
+
+.visualVideo {
+  display: block;
+  background: #111;
 }
 
 .visual::before {
@@ -118,20 +114,12 @@
 
   .frame {
     grid-template-columns:
-      minmax(200px, 0.78fr)
+      minmax(240px, 1.1fr)
       1px
       minmax(280px, 1.32fr)
-      minmax(260px, 1.18fr);
+      minmax(240px, 1.1fr);
     align-items: stretch;
     min-height: 320px;
-  }
-
-  .emblem {
-    padding: 1.5rem 1.1rem 1.5rem 1.35rem;
-  }
-
-  .emblemImg {
-    width: min(100%, 300px);
   }
 
   .rule {
@@ -165,17 +153,30 @@
   }
 
   .visual {
-    min-height: 100%;
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
   }
 
-  .visualImg {
+  .visualImg,
+  .visualVideo {
     position: absolute;
     inset: 0;
-    min-height: 100%;
+    min-height: 0;
     height: 100%;
+    width: 100%;
   }
 
-  .visual::before {
+  .visualLeft::before {
+    background: linear-gradient(
+      270deg,
+      var(--bg) 0%,
+      rgba(11, 12, 16, 0.72) 12%,
+      transparent 38%
+    );
+  }
+
+  .visualRight::before {
     background: linear-gradient(
       90deg,
       var(--bg) 0%,
@@ -204,32 +205,8 @@
   }
 }
 
-@keyframes emblemFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .emblemImg,
-  .visualImg {
-    animation: none !important;
-  }
-
   .frame {
     transition: none;
-  }
-}
-
-@keyframes kenBurns {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.07);
   }
 }

@@ -6,7 +6,7 @@ import {
   listReservations,
   updateReservationStatus,
 } from "../api";
-import { sessionLabel, slotLabel, venueLabel } from "../rsvpOptions";
+import { sessionLabel, venueLabel, bookingTimeLabel } from "../rsvpOptions";
 import AdminBookingForm from "./AdminBookingForm";
 import styles from "./AdminPage.module.css";
 
@@ -157,9 +157,11 @@ function AdminPage() {
                     <td>
                       {row.firstChoiceDate}
                       <span>
-                        {row.slotTime
-                          ? slotLabel(row.slotTime)
-                          : row.secondChoiceDate || "No time selected"}
+                        {bookingTimeLabel(
+                          row.venue,
+                          row.sessionFormat,
+                          row.slotTime
+                        )}
                       </span>
                     </td>
                     <td>

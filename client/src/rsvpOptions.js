@@ -14,11 +14,15 @@ export const SESSION_OPTIONS = [
 export const VENUE_OPTIONS = [
   {
     value: "private-dining",
-    title: "Private Dining Room at Rumi's Kitchen",
+    title: "Rumi's Kitchen — Avalon",
+    detail: "7105 Avalon Blvd, Alpharetta, GA 30009",
+    booking: "session",
   },
   {
-    value: "briefing-suite",
-    title: "Executive Briefing Suite / On-Site",
+    value: "starbucks",
+    title: "Starbucks",
+    detail: "Alpharetta, Georgia",
+    booking: "slots",
   },
 ];
 
@@ -50,8 +54,16 @@ export const emptyRsvp = {
   assistantContact: "",
 };
 
+export function isSlotVenue(value) {
+  return value === "starbucks";
+}
+
 export function sessionLabel(value) {
   return SESSION_OPTIONS.find((item) => item.value === value)?.title || value;
+}
+
+export function sessionDetail(value) {
+  return SESSION_OPTIONS.find((item) => item.value === value)?.detail || "";
 }
 
 export function venueLabel(value) {
@@ -65,4 +77,9 @@ export function slotLabel(value) {
 export function sessionFromSlot(value) {
   if (DINNER_SLOTS.some((item) => item.value === value)) return "dinner";
   return "lunch";
+}
+
+export function bookingTimeLabel(venue, sessionFormat, slotTime) {
+  if (isSlotVenue(venue) && slotTime) return slotLabel(slotTime);
+  return sessionDetail(sessionFormat) || "Full session";
 }

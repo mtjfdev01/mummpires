@@ -10,6 +10,9 @@ import {
   SESSION_OPTIONS,
   VENUE_OPTIONS,
   emptyRsvp,
+  isSlotVenue,
+  sessionDetail,
+  sessionLabel,
 } from "../../rsvpOptions";
 import styles from "./RsvpForm.module.css";
 
@@ -125,24 +128,32 @@ function RsvpForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [availability, setAvailability] = useState({ slots: {} });
+  const [availability, setAvailability] = useState({
+    rumi: { lunch: [], dinner: [] },
+    slots: {},
+  });
 
   const takenSlots = availability.slots || {};
+  const rumiLunch = availability.rumi?.lunch || [];
+  const rumiDinner = availability.rumi?.dinner || [];
+  const slotBooking = isSlotVenue(form.venue);
   const otherSession =
     form.sessionFormat === "lunch"
       ? "Private Executive Dinner"
       : "Private Executive Lunch";
 
+  const applyAvailability = (data) => {
+    setAvailability({
+      rumi: {
+        lunch: data.rumi?.lunch || data.lunch || [],
+        dinner: data.rumi?.dinner || data.dinner || [],
+      },
+      slots: data.starbucks?.slots || data.slots || {},
+    });
+  };
+
   useEffect(() => {
-    getAvailability()
-      .then((data) =>
-        setAvailability({
-          lunch: data.lunch || [],
-          dinner: data.dinner || [],
-          slots: data.slots || {},
-        })
-      )
-      .catch(() => {});
+    getAvailability().then(applyAvailability).catch(() => {});
   }, []);
 
   const setField = (key, value) => {
@@ -151,8 +162,25 @@ function RsvpForm({
   };
 
   const isFullyBooked = (key) => {
-    const taken = takenSlots[key] || [];
-    return ALL_SLOTS.every((slot) => taken.includes(slot.value));
+    if (slotBooking) {
+      const taken = takenSlots[key] || [];
+      return ALL_SLOTS.every((slot) => taken.includes(slot.value));
+    }
+    const taken =
+      form.sessionFormat === "dinner" ? rumiDinner : rumiLunch;
+    return taken.includes(key);
+  };
+
+  const setVenue = (value) => {
+    setForm((prev) => ({
+      ...prev,
+      venue: value,
+      firstChoiceDate: "",
+      secondChoiceDate: "",
+      slotTime: "",
+      sessionFormat: "lunch",
+    }));
+    setError("");
   };
 
   const setSession = (value) => {
@@ -160,6 +188,7 @@ function RsvpForm({
       ...prev,
       sessionFormat: value,
       slotTime: "",
+      firstChoiceDate: "",
     }));
     setError("");
   };
@@ -167,7 +196,9 @@ function RsvpForm({
   const pickDate = (key) => {
     if (isFullyBooked(key)) {
       setError(
-        `This slot is not available. Please choose another date or try the ${otherSession}.`
+        slotBooking
+          ? "This date is fully booked. Please choose another date."
+          : `This session is not available. Please choose another date or try the ${otherSession}.`
       );
       return;
     }
@@ -200,37 +231,41 @@ function RsvpForm({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!form.firstChoiceDate || !form.slotTime) {
+    if (!form.venue) {
+      setError("Please choose a location.");
+      return;
+    }
+    if (!form.firstChoiceDate) {
+      setError("Please pick an available date.");
+      return;
+    }
+    if (slotBooking && !form.slotTime) {
       setError("Please pick a date and an available time slot.");
+      return;
+    }
+    if (!slotBooking && !form.sessionFormat) {
+      setError("Please choose lunch or dinner.");
       return;
     }
     setSubmitting(true);
     setError("");
     try {
+      const payload = {
+        ...form,
+        slotTime: slotBooking ? form.slotTime : "",
+      };
       const created = await (onSubmitted
-        ? onSubmitted(form)
-        : createReservation(form));
+        ? onSubmitted(payload)
+        : createReservation(payload));
       setSuccess(true);
       setForm(emptyRsvp);
       const next = await getAvailability().catch(() => null);
-      if (next) {
-        setAvailability({
-          lunch: next.lunch || [],
-          dinner: next.dinner || [],
-          slots: next.slots || {},
-        });
-      }
+      if (next) applyAvailability(next);
       return created;
     } catch (err) {
       setError(err.message || "Unable to submit reservation.");
       const next = await getAvailability().catch(() => null);
-      if (next) {
-        setAvailability({
-          lunch: next.lunch || [],
-          dinner: next.dinner || [],
-          slots: next.slots || {},
-        });
-      }
+      if (next) applyAvailability(next);
     } finally {
       setSubmitting(false);
     }
@@ -241,46 +276,9 @@ function RsvpForm({
       <article className={styles.card}>
         <header className={styles.cardHead}>
           <span className={styles.num}>1</span>
-          <h3>Session Format</h3>
-        </header>
-        <div className={styles.options}>
-          {SESSION_OPTIONS.map((option) => (
-            <label
-              key={option.value}
-              className={`${styles.option} ${
-                form.sessionFormat === option.value ? styles.optionOn : ""
-              }`}
-            >
-              <input
-                type="radio"
-                name="sessionFormat"
-                value={option.value}
-                checked={form.sessionFormat === option.value}
-                onChange={() => setSession(option.value)}
-              />
-              <span>
-                <strong>{option.title}</strong>
-                <em>{option.detail}</em>
-              </span>
-            </label>
-          ))}
-        </div>
-      </article>
-
-      <article className={styles.card}>
-        <header className={styles.cardHead}>
-          <span className={styles.num}>2</span>
           <h3>Specific Venue</h3>
         </header>
-        <p className={styles.venueMeta}>
-          <HiOutlineLocationMarker />
-          <span>
-            Rumi&apos;s Kitchen — Avalon
-            <br />
-            7105 Avalon Blvd, Alpharetta, GA 30009
-          </span>
-        </p>
-        {/* <div className={styles.options}>
+        <div className={styles.options}>
           {VENUE_OPTIONS.map((option) => (
             <label
               key={option.value}
@@ -293,20 +291,55 @@ function RsvpForm({
                 name="venue"
                 value={option.value}
                 checked={form.venue === option.value}
-                onChange={() => setField("venue", option.value)}
+                onChange={() => setVenue(option.value)}
               />
-              <span>
-                <strong>{option.title}</strong>
+              <span className={styles.venueChoice}>
+                <HiOutlineLocationMarker />
+                <span>
+                  <strong>{option.title}</strong>
+                  <em>{option.detail}</em>
+                </span>
               </span>
             </label>
           ))}
-        </div> */}
+        </div>
       </article>
+
+      {!slotBooking ? (
+        <article className={styles.card}>
+          <header className={styles.cardHead}>
+            <span className={styles.num}>2</span>
+            <h3>Session Format</h3>
+          </header>
+          <div className={styles.options}>
+            {SESSION_OPTIONS.map((option) => (
+              <label
+                key={option.value}
+                className={`${styles.option} ${
+                  form.sessionFormat === option.value ? styles.optionOn : ""
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="sessionFormat"
+                  value={option.value}
+                  checked={form.sessionFormat === option.value}
+                  onChange={() => setSession(option.value)}
+                />
+                <span>
+                  <strong>{option.title}</strong>
+                  <em>{option.detail}</em>
+                </span>
+              </label>
+            ))}
+          </div>
+        </article>
+      ) : null}
 
       <article className={`${styles.card} ${styles.full}`}>
         <header className={styles.cardHead}>
-          <span className={styles.num}>3</span>
-          <h3>Date Availability</h3>
+          <span className={styles.num}>{slotBooking ? "2" : "3"}</span>
+          <h3>{slotBooking ? "Date & Time" : "Date Availability"}</h3>
         </header>
         <div className={styles.dateLayout}>
           <Calendar
@@ -315,60 +348,73 @@ function RsvpForm({
             onSelect={pickDate}
           />
           <div className={styles.times}>
-            {form.firstChoiceDate ? (
-              <>
+            {slotBooking ? (
+              form.firstChoiceDate ? (
+                <>
+                  <p className={styles.timesHead}>
+                    Available starting times for{" "}
+                    {formatPretty(form.firstChoiceDate)}
+                  </p>
+                  <div className={styles.slotGrid}>
+                    <div className={styles.slotCol}>
+                      <h4>Lunch</h4>
+                      {LUNCH_SLOTS.map((slot) => {
+                        const taken = (
+                          takenSlots[form.firstChoiceDate] || []
+                        ).includes(slot.value);
+                        return (
+                          <button
+                            key={slot.value}
+                            type="button"
+                            disabled={taken}
+                            className={`${styles.slotBtn} ${
+                              form.slotTime === slot.value ? styles.slotOn : ""
+                            }`}
+                            onClick={() => pickSlot(slot.value)}
+                          >
+                            {slot.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className={styles.slotCol}>
+                      <h4>Dinner</h4>
+                      {DINNER_SLOTS.map((slot) => {
+                        const taken = (
+                          takenSlots[form.firstChoiceDate] || []
+                        ).includes(slot.value);
+                        return (
+                          <button
+                            key={slot.value}
+                            type="button"
+                            disabled={taken}
+                            className={`${styles.slotBtn} ${
+                              form.slotTime === slot.value ? styles.slotOn : ""
+                            }`}
+                            onClick={() => pickSlot(slot.value)}
+                          >
+                            {slot.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              ) : (
                 <p className={styles.timesHead}>
-                  Available starting times for{" "}
-                  {formatPretty(form.firstChoiceDate)}
+                  Select a date to see available Starbucks time slots.
                 </p>
-                <div className={styles.slotGrid}>
-                  <div className={styles.slotCol}>
-                    <h4>Lunch</h4>
-                    {LUNCH_SLOTS.map((slot) => {
-                      const taken = (
-                        takenSlots[form.firstChoiceDate] || []
-                      ).includes(slot.value);
-                      return (
-                        <button
-                          key={slot.value}
-                          type="button"
-                          disabled={taken}
-                          className={`${styles.slotBtn} ${
-                            form.slotTime === slot.value ? styles.slotOn : ""
-                          }`}
-                          onClick={() => pickSlot(slot.value)}
-                        >
-                          {slot.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <div className={styles.slotCol}>
-                    <h4>Dinner</h4>
-                    {DINNER_SLOTS.map((slot) => {
-                      const taken = (
-                        takenSlots[form.firstChoiceDate] || []
-                      ).includes(slot.value);
-                      return (
-                        <button
-                          key={slot.value}
-                          type="button"
-                          disabled={taken}
-                          className={`${styles.slotBtn} ${
-                            form.slotTime === slot.value ? styles.slotOn : ""
-                          }`}
-                          onClick={() => pickSlot(slot.value)}
-                        >
-                          {slot.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </>
+              )
+            ) : form.firstChoiceDate ? (
+              <p className={styles.timesHead}>
+                {sessionLabel(form.sessionFormat)}
+                <br />
+                {sessionDetail(form.sessionFormat)} on{" "}
+                {formatPretty(form.firstChoiceDate)}
+              </p>
             ) : (
               <p className={styles.timesHead}>
-                Select a date to see available lunch and dinner slots.
+                Select a date for this lunch or dinner session.
               </p>
             )}
           </div>
@@ -377,21 +423,7 @@ function RsvpForm({
 
       <article className={styles.card}>
         <header className={styles.cardHead}>
-          <span className={styles.num}>4</span>
-          <h3>Catering / Dietary</h3>
-        </header>
-        <textarea
-          className={styles.textarea}
-          rows={3}
-          placeholder="Dietary Preferences & Special Accommodations"
-          value={form.dietary}
-          onChange={(event) => setField("dietary", event.target.value)}
-        />
-      </article>
-
-      <article className={styles.card}>
-        <header className={styles.cardHead}>
-          <span className={styles.num}>5</span>
+          <span className={styles.num}>{slotBooking ? "3" : "4"}</span>
           <h3>Contact Details</h3>
         </header>
         <div className={styles.fields}>
