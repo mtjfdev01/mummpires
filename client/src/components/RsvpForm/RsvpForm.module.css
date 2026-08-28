@@ -542,6 +542,101 @@
   }
 }
 
+@media (max-width: 719px) {
+  .title {
+    font-size: 1.08rem;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+
+  .num {
+    width: 1.55rem;
+    height: 1.55rem;
+    font-size: 0.82rem;
+  }
+
+  .cardHead h3 {
+    font-size: 0.92rem;
+    letter-spacing: 0.1em;
+  }
+
+  .option strong {
+    font-size: 1rem;
+  }
+
+  .option em {
+    font-size: 0.9rem;
+  }
+
+  .timesHead {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .slotCol h4 {
+    font-size: 0.82rem;
+  }
+
+  .slotBtn {
+    font-size: 0.95rem;
+    padding: 0.62rem 0.45rem;
+  }
+
+  .sessionSlot strong {
+    font-size: 0.98rem;
+  }
+
+  .sessionSlot em {
+    font-size: 0.9rem;
+  }
+
+  .dateField span {
+    font-size: 0.78rem;
+  }
+
+  .dateField strong {
+    font-size: 1rem;
+  }
+
+  .calHeader {
+    font-size: 1rem;
+  }
+
+  .calDow {
+    font-size: 0.78rem;
+  }
+
+  .calDay {
+    height: 2rem;
+    font-size: 0.92rem;
+  }
+
+  .note {
+    font-size: 0.88rem;
+  }
+
+  .fields label {
+    font-size: 0.92rem;
+  }
+
+  .fields input {
+    font-size: 1rem;
+    padding: 0.68rem 0.8rem;
+  }
+
+  .submit {
+    font-size: 0.82rem;
+    padding: 0.95rem 1.05rem;
+  }
+
+  .secure,
+  .error,
+  .success {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
 @keyframes frameGlow {
   0%,
   100% {

@@ -224,6 +224,19 @@
   }
 }
 
+@media (max-width: 719px) {
+  .heading {
+    font-size: 1.08rem;
+    letter-spacing: 0.12em;
+    line-height: 1.45;
+  }
+
+  .body {
+    font-size: 1.08rem;
+    line-height: 1.78;
+  }
+}
+
 @keyframes emblemFloat {
   0%,
   100% {

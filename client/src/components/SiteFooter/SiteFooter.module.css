@@ -112,6 +112,25 @@
   }
 }
 
+@media (max-width: 719px) {
+  .tagline {
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+
+  .metaTitle {
+    font-size: 1.05rem;
+  }
+
+  .metaSub {
+    font-size: 0.95rem;
+  }
+
+  .icon {
+    font-size: 1.3rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .logo {
     animation: none !important;

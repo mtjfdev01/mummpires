@@ -331,6 +331,43 @@
   }
 }
 
+@media (max-width: 719px) {
+  .heading {
+    font-size: 1.12rem;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+  }
+
+  .body {
+    font-size: 1.08rem;
+    line-height: 1.78;
+  }
+
+  .role {
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+  }
+
+  .org {
+    font-size: 0.98rem;
+  }
+
+  .connectHeading {
+    font-size: 0.98rem;
+  }
+
+  .connectBody,
+  .connectNote {
+    font-size: 1.02rem;
+    line-height: 1.65;
+  }
+
+  .connectBtn {
+    font-size: 0.82rem;
+    padding: 1rem 1.05rem;
+  }
+}
+
 @keyframes diamondPulse {
   0%,
   100% {
