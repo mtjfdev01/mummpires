@@ -8,6 +8,7 @@ import {
   VENUE_OPTIONS,
   isSlotVenue,
   sessionFromSlot,
+  sessionSlotTime,
 } from "../rsvpOptions";
 import styles from "./AdminBookingForm.module.css";
 
@@ -100,9 +101,12 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
       const taken = takenSlots[key] || [];
       return ALL_SLOTS.every((slot) => taken.includes(slot.value));
     }
-    const taken = sessionFormat === "dinner" ? rumiDinner : rumiLunch;
-    return taken.includes(key);
+    const taken = rumiLunch.includes(key) && rumiDinner.includes(key);
+    return taken;
   };
+
+  const rumiSessionTaken = (value) =>
+    (value === "dinner" ? rumiDinner : rumiLunch).includes(date);
 
   const pickVenue = (value) => {
     setVenue(value);
@@ -115,6 +119,18 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
   const pickDate = (key) => {
     setDate(key);
     setSlotTime("");
+    setError("");
+  };
+
+  const pickRumiSession = (value) => {
+    if (rumiSessionTaken(value)) {
+      setError(
+        "This session is not available. Please choose another date or the other session."
+      );
+      return;
+    }
+    setSessionFormat(value);
+    setSlotTime(sessionSlotTime(value));
     setError("");
   };
 
@@ -132,11 +148,15 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!date || (slotBooking && !slotTime)) {
+    if (!date) {
+      setError("Please pick a date.");
+      return;
+    }
+    if (!slotTime) {
       setError(
         slotBooking
           ? "Please pick a date and an available time slot."
-          : "Please pick a date for this session."
+          : "Please choose lunch or dinner."
       );
       return;
     }
@@ -148,7 +168,7 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
         venue,
         firstChoiceDate: date,
         secondChoiceDate: "",
-        slotTime: slotBooking ? slotTime : "",
+        slotTime,
         dietary: dietary.trim(),
         fullName: fullName.trim(),
         email: email.trim(),
@@ -224,38 +244,6 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
         </div>
       </fieldset>
 
-      {!slotBooking ? (
-        <fieldset className={styles.block}>
-          <legend>Session</legend>
-          <div className={styles.options}>
-            {SESSION_OPTIONS.map((option) => (
-              <label
-                key={option.value}
-                className={`${styles.option} ${
-                  sessionFormat === option.value ? styles.optionOn : ""
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="sessionFormat"
-                  value={option.value}
-                  checked={sessionFormat === option.value}
-                  onChange={() => {
-                    setSessionFormat(option.value);
-                    setDate("");
-                    setError("");
-                  }}
-                />
-                <span>
-                  {option.title}
-                  <em>{option.detail}</em>
-                </span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      ) : null}
-
       <div className={styles.scheduler}>
         <div className={styles.calendar}>
           <div className={styles.calHeader}>
@@ -326,16 +314,37 @@ function AdminBookingForm({ onSubmitted, onCancel }) {
                   </div>
                 </>
               ) : (
-                <p className={styles.timesHead}>
-                  {SESSION_OPTIONS.find((item) => item.value === sessionFormat)?.title}{" "}
-                  on {formatPretty(date)}
-                </p>
+                <>
+                  <p className={styles.timesHead}>
+                    Choose lunch or dinner for {formatPretty(date)}
+                  </p>
+                  <div className={styles.sessionSlots}>
+                    {SESSION_OPTIONS.map((option) => {
+                      const taken = rumiSessionTaken(option.value);
+                      const selected = slotTime === sessionSlotTime(option.value);
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          disabled={taken}
+                          className={`${styles.sessionSlot} ${
+                            selected ? styles.slotOn : ""
+                          }`}
+                          onClick={() => pickRumiSession(option.value)}
+                        >
+                          <strong>{option.title}</strong>
+                          <em>{option.detail}</em>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
               )
             ) : (
               <p className={styles.timesHead}>
                 {slotBooking
                   ? "Select a date to see available Starbucks time slots."
-                  : "Select a date for this lunch or dinner session."}
+                  : "Select a date to see lunch and dinner availability."}
               </p>
             )}
         </div>

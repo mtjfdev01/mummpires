@@ -79,6 +79,10 @@ export function sessionFromSlot(value) {
   return "lunch";
 }
 
+export function sessionSlotTime(sessionFormat) {
+  return sessionFormat === "dinner" ? "19:00" : "12:30";
+}
+
 export function bookingTimeLabel(venue, sessionFormat, slotTime) {
   if (isSlotVenue(venue) && slotTime) return slotLabel(slotTime);
   return sessionDetail(sessionFormat) || "Full session";

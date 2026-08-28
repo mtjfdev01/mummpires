@@ -197,6 +197,52 @@
   font-weight: 700;
 }
 
+.sessionSlots {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sessionSlot {
+  display: grid;
+  gap: 0.18rem;
+  text-align: left;
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.sessionSlot strong {
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+}
+
+.sessionSlot em {
+  font-style: normal;
+  color: #bdbdbd;
+  font-size: 0.72rem;
+}
+
+.sessionSlot:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.sessionSlot:not(:disabled):hover {
+  transform: translateY(-1px);
+  border-color: var(--gold);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.12);
+}
+
+.sessionSlot.slotOn em {
+  color: #3a3010;
+}
+
 .dateRow {
   display: grid;
   gap: 0.5rem;
