@@ -4,11 +4,11 @@ function Legacy() {
   return (
     <section className={styles.legacy} aria-labelledby="legacy-heading">
       <div className={styles.frame}>
-        <div className={`${styles.visual} ${styles.visualLeft}`}>
+        <div className={styles.emblem}>
           <img
-            src="/assets/legacy-visual.png"
-            alt="Night view of MuMMpires bio-architecture along the waterfront"
-            className={styles.visualImg}
+            src="/assets/img_one.jpg"
+            alt="MuMMpires crest"
+            className={styles.emblemImg}
           />
         </div>
 

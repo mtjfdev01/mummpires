@@ -23,6 +23,23 @@
   box-shadow: 0 0 28px rgba(212, 175, 55, 0.1);
 }
 
+.emblem {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+  min-width: 0;
+  height: 280px;
+}
+
+.emblemImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 68% center;
+  animation: emblemFloat 8s ease-in-out infinite;
+}
+
 .rule {
   display: none;
 }
@@ -64,7 +81,6 @@
   height: 220px;
 }
 
-.visualImg,
 .visualVideo {
   position: absolute;
   inset: 0;
@@ -73,9 +89,6 @@
   max-width: none;
   object-fit: cover;
   object-position: center;
-}
-
-.visualVideo {
   display: block;
   background: #111;
 }
@@ -98,6 +111,10 @@
     padding: 2.5rem 2.4rem 3.25rem;
   }
 
+  .emblem {
+    height: 320px;
+  }
+
   .copy {
     padding: 1.75rem 2rem 2rem;
   }
@@ -114,12 +131,24 @@
 
   .frame {
     grid-template-columns:
-      minmax(240px, 1.1fr)
+      minmax(200px, 0.78fr)
       1px
       minmax(280px, 1.32fr)
       minmax(240px, 1.1fr);
     align-items: stretch;
     min-height: 320px;
+  }
+
+  .emblem {
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+    padding: 0;
+  }
+
+  .emblemImg {
+    width: 100%;
+    height: 100%;
   }
 
   .rule {
@@ -158,22 +187,12 @@
     align-self: stretch;
   }
 
-  .visualImg,
   .visualVideo {
     position: absolute;
     inset: 0;
     min-height: 0;
     height: 100%;
     width: 100%;
-  }
-
-  .visualLeft::before {
-    background: linear-gradient(
-      270deg,
-      var(--bg) 0%,
-      rgba(11, 12, 16, 0.72) 12%,
-      transparent 38%
-    );
   }
 
   .visualRight::before {
@@ -205,7 +224,21 @@
   }
 }
 
+@keyframes emblemFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .emblemImg {
+    animation: none;
+  }
+
   .frame {
     transition: none;
   }
