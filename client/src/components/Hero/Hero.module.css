@@ -102,14 +102,26 @@
   animation: goldPulse 5.5s ease-in-out infinite;
 }
 
-.brandTag {
-  margin-top: 0.2rem;
+.brandLead {
+  margin-top: 0.45rem;
   color: var(--gold);
   font-family: "Cinzel", serif;
-  font-size: clamp(0.62rem, 1.4vw, 0.78rem);
+  font-size: clamp(0.78rem, 2.6vw, 1.05rem);
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  text-align: center;
+}
+
+.brandSub {
+  margin-top: 0.28rem;
+  max-width: 22rem;
+  color: var(--text-muted);
+  font-family: "Cinzel", serif;
+  font-size: clamp(0.68rem, 2.1vw, 0.86rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
   text-align: center;
 }
 
@@ -181,6 +193,13 @@
   letter-spacing: 0.035em;
   line-height: 1.45;
   color: var(--text-muted);
+}
+
+@media (max-width: 719px) {
+  .subBreak,
+  .brandBreak {
+    display: block;
+  }
 }
 
 .divider {
@@ -531,7 +550,6 @@
   border-radius: 99px;
   background: rgba(212, 175, 55, 0.28);
   position: relative;
-  overflow: hidden;
   min-width: 2.5rem;
 }
 
@@ -540,15 +558,32 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 6%;
+  width: 0;
   border-radius: inherit;
   background: var(--gold);
-  animation: progressPulse 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.progressInput {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -8px;
+  bottom: -8px;
+  width: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 
 @media (min-width: 720px) {
   .inner {
     padding: 1.1rem 2.4rem 1.75rem;
+  }
+
+  .brandSub {
+    max-width: none;
+    white-space: nowrap;
   }
 
   .logo {
@@ -579,6 +614,11 @@
 
   .brand {
     margin-bottom: 0;
+  }
+
+  .brandSub {
+    max-width: none;
+    white-space: nowrap;
   }
 
   .logo {

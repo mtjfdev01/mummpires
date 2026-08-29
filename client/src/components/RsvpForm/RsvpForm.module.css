@@ -295,8 +295,9 @@
 }
 
 .calendar {
-  border: 1px solid rgba(212, 175, 55, 0.28);
-  border-radius: 8px;
+  border: 0;
+  border-top: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 0;
   padding: 0.55rem 0.6rem 0.65rem;
 }
 
@@ -497,6 +498,15 @@
   animation: pageEnter 0.45s ease both;
 }
 
+.successDone {
+  color: var(--gold);
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  padding: 0.35rem 0.25rem 0.55rem;
+  animation: pageEnter 0.45s ease both;
+}
+
 @media (min-width: 720px) {
   .section {
     padding: 0 2.4rem 1.6rem;
@@ -631,7 +641,8 @@
 
   .secure,
   .error,
-  .success {
+  .success,
+  .successDone {
     font-size: 0.9rem;
     line-height: 1.5;
   }

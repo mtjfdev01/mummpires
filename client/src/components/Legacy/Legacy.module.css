@@ -93,6 +93,79 @@
   background: #111;
 }
 
+.controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.65rem 0.6rem;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(12, 10, 6, 0.55) 38%,
+    rgba(18, 14, 6, 0.82) 100%
+  );
+}
+
+.ctrlBtn {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 0;
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.timestamp {
+  flex-shrink: 0;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.progress {
+  flex: 1;
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(212, 175, 55, 0.28);
+  position: relative;
+  min-width: 2rem;
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: inherit;
+  background: var(--gold);
+  pointer-events: none;
+}
+
+.progressInput {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -8px;
+  bottom: -8px;
+  width: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
 .visual::before {
   content: "";
   position: absolute;

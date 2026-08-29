@@ -273,6 +273,30 @@ function RsvpForm({
     }
   };
 
+  if (success) {
+    const confirmation = (
+      <p className={styles.successDone} role="status">
+        Your request has been received. Our concierge will contact you within 2
+        hours.
+      </p>
+    );
+
+    if (variant === "embedded") {
+      return confirmation;
+    }
+
+    return (
+      <section className={styles.section} id="rsvp" aria-labelledby="rsvp-heading">
+        <div className={styles.frame}>
+          <h2 id="rsvp-heading" className={styles.title}>
+            Reservation Received
+          </h2>
+          {confirmation}
+        </div>
+      </section>
+    );
+  }
+
   const inner = (
     <form className={styles.form} onSubmit={handleSubmit}>
       <article className={styles.card}>
@@ -459,12 +483,6 @@ function RsvpForm({
       </article>
 
       {error ? <p className={`${styles.error} ${styles.full}`}>{error}</p> : null}
-      {success ? (
-        <p className={`${styles.success} ${styles.full}`}>
-          Your request has been received. Our concierge will contact you within
-          2 hours.
-        </p>
-      ) : null}
 
       <button type="submit" className={`${styles.submit} ${styles.full}`} disabled={submitting}>
         <FaLock />

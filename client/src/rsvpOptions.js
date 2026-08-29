@@ -7,7 +7,7 @@ export const SESSION_OPTIONS = [
   {
     value: "dinner",
     title: "Private Executive Dinner",
-    detail: "7:00 PM - 9:00 PM",
+    detail: "6:30 PM - 8:30 PM",
   },
 ];
 
@@ -21,7 +21,7 @@ export const VENUE_OPTIONS = [
   {
     value: "starbucks",
     title: "Starbucks",
-    detail: "Alpharetta, Georgia",
+    detail: "9000 Avalon Blvd, Alpharetta, GA 30009", 
     booking: "slots",
   },
 ];

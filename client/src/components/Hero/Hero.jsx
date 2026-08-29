@@ -2,13 +2,33 @@ import { useRef, useState } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { HiOutlineCalendar, HiOutlineLocationMarker } from "react-icons/hi";
 import { IoMdArrowForward } from "react-icons/io";
-import { IoSettingsOutline, IoVolumeMedium } from "react-icons/io5";
+import { IoVolumeMedium, IoVolumeMute } from "react-icons/io5";
 import { MdFullscreen, MdSkipNext } from "react-icons/md";
 import styles from "./Hero.module.css";
 
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${String(secs).padStart(2, "0")}`;
+}
+
 function Hero() {
   const videoRef = useRef(null);
+  const playerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const syncTime = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    setCurrentTime(video.currentTime || 0);
+    if (Number.isFinite(video.duration) && video.duration > 0) {
+      setDuration(video.duration);
+    }
+  };
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -23,6 +43,42 @@ function Hero() {
   const playVideo = () => {
     videoRef.current?.play();
   };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setMuted(video.muted);
+  };
+
+  const seekTo = (time) => {
+    const video = videoRef.current;
+    if (!video || !Number.isFinite(time)) return;
+    const end = Number.isFinite(video.duration) ? video.duration : time;
+    video.currentTime = Math.min(Math.max(time, 0), end);
+    syncTime();
+  };
+
+  const skipAhead = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const end = Number.isFinite(video.duration) ? video.duration : 0;
+    const next = (video.currentTime || 0) + 10;
+    video.currentTime = end && next >= end ? 0 : next;
+    syncTime();
+  };
+
+  const toggleFullscreen = () => {
+    const node = playerRef.current;
+    if (!node) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+      return;
+    }
+    node.requestFullscreen?.();
+  };
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <section className={styles.hero}>
@@ -50,7 +106,11 @@ function Hero() {
             alt="MuMMpires"
             className={styles.logo}
           />
-          <p className={styles.brandTag}>Prop-AI Startup</p>
+          <p className={styles.brandLead}>The Principal of AI Driven</p>
+          <p className={styles.brandSub}>
+            America&apos;s First Ever Bio-Autonomous{" "}
+            <span className={styles.brandBreak}>Real Estate Project</span>
+          </p>
         </header>
 
         <div className={styles.grid}>
@@ -62,7 +122,8 @@ function Hero() {
               </h1>
 
               <p className={styles.subhead}>
-                An Exclusive Inaugural Session for Selected Visionaries
+                An Exclusive Inaugural Session{" "}
+                <span className={styles.subBreak}>for Selected Visionaries</span>
               </p>
 
               <div className={styles.divider} aria-hidden="true">
@@ -95,7 +156,7 @@ function Hero() {
                       <HiOutlineLocationMarker className={styles.metaIcon} />
                       <div>
                         <p className={styles.metaTitle}>Starbucks</p>
-                        <p className={styles.metaSub}>Alpharetta, Georgia</p>
+                        <p className={styles.metaSub}>Avalon Blvd, Alpharetta, Georgia</p>
                       </div>
                     </div>
                   </div>
@@ -134,6 +195,7 @@ function Hero() {
 
           <div className={styles.playerWrap}>
             <div
+              ref={playerRef}
               className={styles.player}
               role="group"
               aria-label="Introduction video player"
@@ -143,11 +205,14 @@ function Hero() {
                 className={styles.poster}
                 src="/assets/hero_video.mp4"
                 autoPlay
-                muted
+                muted={muted}
                 loop
                 playsInline
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
+                onTimeUpdate={syncTime}
+                onLoadedMetadata={syncTime}
+                onDurationChange={syncTime}
               />
 
               {!isPlaying && (
@@ -174,35 +239,46 @@ function Hero() {
                   <button
                     type="button"
                     className={styles.ctrlBtn}
-                    aria-label="Next"
+                    onClick={skipAhead}
+                    aria-label="Skip forward 10 seconds"
                   >
                     <MdSkipNext />
                   </button>
-                  <span className={styles.timestamp}>0:00 / 1:00</span>
+                  <span className={styles.timestamp}>
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
                 </div>
 
-                <div className={styles.progress} aria-hidden="true">
-                  <span className={styles.progressFill} />
+                <div className={styles.progress}>
+                  <span
+                    className={styles.progressFill}
+                    style={{ width: `${progress}%` }}
+                  />
+                  <input
+                    type="range"
+                    className={styles.progressInput}
+                    min="0"
+                    max={duration || 0}
+                    step="0.05"
+                    value={currentTime}
+                    onChange={(event) => seekTo(Number(event.target.value))}
+                    aria-label="Video progress"
+                  />
                 </div>
 
                 <div className={styles.controlsRight}>
                   <button
                     type="button"
                     className={styles.ctrlBtn}
-                    aria-label="Volume"
+                    onClick={toggleMute}
+                    aria-label={muted ? "Unmute" : "Mute"}
                   >
-                    <IoVolumeMedium />
+                    {muted ? <IoVolumeMute /> : <IoVolumeMedium />}
                   </button>
                   <button
                     type="button"
                     className={styles.ctrlBtn}
-                    aria-label="Settings"
-                  >
-                    <IoSettingsOutline />
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.ctrlBtn}
+                    onClick={toggleFullscreen}
                     aria-label="Fullscreen"
                   >
                     <MdFullscreen />
