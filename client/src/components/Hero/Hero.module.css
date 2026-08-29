@@ -102,8 +102,20 @@
   animation: goldPulse 5.5s ease-in-out infinite;
 }
 
+.wordmark {
+  margin-top: 0.2rem;
+  color: var(--gold);
+  font-family: "Cinzel", serif;
+  font-size: clamp(1.05rem, 3.4vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: none;
+  text-align: center;
+  filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.28));
+}
+
 .brandLead {
-  margin-top: 0.45rem;
+  margin-top: 0.35rem;
   color: var(--gold);
   font-family: "Cinzel", serif;
   font-size: clamp(0.78rem, 2.6vw, 1.05rem);
@@ -199,6 +211,43 @@
   .subBreak,
   .brandBreak {
     display: block;
+  }
+
+  .wordmark {
+    font-size: 1.28rem;
+  }
+
+  .brandLead {
+    font-size: 0.95rem;
+  }
+
+  .brandSub {
+    font-size: 0.86rem;
+  }
+
+  .kicker {
+    font-size: 1.45rem;
+  }
+
+  .goldTitle {
+    font-size: 1.78rem;
+  }
+
+  .subhead {
+    font-size: 0.92rem;
+  }
+
+  .metaTitle {
+    font-size: 0.82rem;
+  }
+
+  .metaSub {
+    font-size: 0.86rem;
+  }
+
+  .primaryBtn,
+  .ghostBtn {
+    font-size: 0.78rem;
   }
 }
 
@@ -721,7 +770,7 @@
 @media (max-width: 419px) {
   .goldTitle {
     white-space: normal;
-    font-size: clamp(1.28rem, 8.4vw, 1.7rem);
+    font-size: 1.62rem;
   }
 
   .ctaRow {

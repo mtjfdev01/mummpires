@@ -106,6 +106,9 @@ function Hero() {
             alt="MuMMpires"
             className={styles.logo}
           />
+          <p className={styles.wordmark} aria-hidden="true">
+            MuMMpires
+          </p>
           <p className={styles.brandLead}>The Principal of AI Driven</p>
           <p className={styles.brandSub}>
             America&apos;s First Ever Bio-Autonomous{" "}
