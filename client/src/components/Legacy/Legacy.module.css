@@ -308,6 +308,10 @@
     font-size: 1.08rem;
     line-height: 1.78;
   }
+
+  .visual {
+    height: 275px;
+  }
 }
 
 @keyframes emblemFloat {

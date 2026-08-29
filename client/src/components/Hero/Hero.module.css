@@ -249,6 +249,10 @@
   .ghostBtn {
     font-size: 0.78rem;
   }
+
+  .player {
+    aspect-ratio: 16 / 12.75;
+  }
 }
 
 .divider {
